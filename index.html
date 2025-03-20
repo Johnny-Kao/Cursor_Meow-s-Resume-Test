@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="En">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meow Meow Meow</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: "Microsoft YaHei", sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            min-height: 100vh;
+            width: 100%;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 0;
+        }
+
+        .profile-section {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            width: 100%;
+            overflow: hidden;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-image {
+            width: 80%;
+            height: 80%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+        }
+
+        .profile-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to right,
+                rgba(0,0,0,0.1),
+                rgba(0,0,0,0)
+            );
+            pointer-events: none;
+        }
+
+        .content-section {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #fff6f6 0%, #fff9f0 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 5vw;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .paw-decoration {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            pointer-events: none;
+            background: 
+                radial-gradient(circle at 90% 90%, #ffb6c1 0%, transparent 30%),
+                radial-gradient(circle at 10% 10%, #ffd1dc 0%, transparent 30%);
+        }
+
+        .name {
+            font-size: min(4vw, 2.5em);
+            margin-bottom: 2vh;
+            color: #2c3e50;
+            background: linear-gradient(45deg, #ff6b88, #ffa07a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-family: "Comic Sans MS", cursive;
+        }
+
+        .title {
+            color: #ff8fa3;
+            font-size: min(2vw, 1.2em);
+            margin-bottom: 3vh;
+        }
+
+        .description {
+            margin-bottom: 4vh;
+            line-height: 1.8;
+            font-size: min(1.8vw, 1em);
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1vw;
+            margin-bottom: 4vh;
+        }
+
+        .tag {
+            background-color: #ffe4e1;
+            color: #ff6b88;
+            border: 1px solid #ffd1dc;
+            border-radius: 20px;
+            padding: 8px 15px;
+            font-size: min(1.4vw, 0.9em);
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background-color: #ff6b88;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .info-section {
+            margin-bottom: 4vh;
+        }
+
+        .info-section h2 {
+            color: #ff6b88;
+            margin-bottom: 1vh;
+            font-size: min(2vw, 1.2em);
+            border-bottom: 2px solid #ffd1dc;
+            font-family: "Comic Sans MS", cursive;
+        }
+
+        .info-section p {
+            font-size: min(1.8vw, 1em);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 2vw;
+            margin-top: 4vh;
+        }
+
+        .social-links a {
+            color: #7f8c8d;
+            font-size: min(3vw, 1.5em);
+            transition: color 0.3s;
+        }
+
+        .social-links a:hover {
+            color: #2c3e50;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 1em 2em;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 3vh;
+            font-size: min(1.8vw, 1em);
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        /* 响应式布局 */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-section {
+                height: 50vh;
+            }
+
+            .content-section {
+                padding: 2rem;
+            }
+
+            .name {
+                font-size: 2em;
+            }
+
+            .title {
+                font-size: 1.2em;
+            }
+
+            .description, .info-section p {
+                font-size: 1em;
+            }
+
+            .tag {
+                font-size: 0.9em;
+            }
+
+            .social-links a {
+                font-size: 1.5em;
+            }
+
+            .profile-image {
+                width: 90%;
+                height: 90%;
+            }
+        }
+
+        .expertise-section {
+            margin-bottom: 4vh;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 2vh;
+        }
+
+        .experience-item h3, .education-item h3 {
+            color: #2c3e50;
+            font-size: min(1.8vw, 1.1em);
+            margin-bottom: 0.5vh;
+        }
+
+        .role {
+            color: #34495e;
+            font-weight: 500;
+            font-size: min(1.6vw, 1em);
+        }
+
+        .duration {
+            color: #7f8c8d;
+            font-size: min(1.4vw, 0.9em);
+            font-style: italic;
+        }
+
+        .description {
+            color: #34495e;
+            line-height: 1.8;
+            margin: 3vh 0;
+        }
+
+        .award-item {
+            display: flex;
+            gap: 1vw;
+        }
+
+        .award-item p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-section">
+            <div class="profile-image">
+                <img src="./image/cat.jpg" alt="个人照片">
+            </div>
+        </div>
+        
+        <div class="content-section">
+            <div class="paw-decoration"></div>
+            <h1 class="name">Mr. Whiskers</h1>
+            <div class="title">Professional Nap Expert | Treat Connoisseur | Certified Cutie</div>
+            
+            <p class="description">
+                Hello hoomans! I'm a distinguished feline professional with extensive experience in napping, 
+                treat-tasting, and being absolutely adorable. My mission is to bring joy and purrs to everyone 
+                I meet, while maintaining my reputation as the most charming cat in the neighborhood.
+            </p>
+
+            <div class="expertise-section">
+                <h2>Special Talents</h2>
+                <div class="tags">
+                    <span class="tag">Professional Napping</span>
+                    <span class="tag">Box Sitting</span>
+                    <span class="tag">Treat Testing</span>
+                    <span class="tag">Bird Watching</span>
+                    <span class="tag">Purr Machine</span>
+                    <span class="tag">Keyboard Walking</span>
+                    <span class="tag">Yarn Expert</span>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>Daily Activities</h2>
+                <div class="experience-item">
+                    <h3>Chief Napping Officer</h3>
+                    <p class="role">Sunbeam Department</p>
+                    <p class="duration">9AM - 5PM (with breaks for snacks)</p>
+                    <p class="description">Specialized in finding the warmest sunspots and coziest blankets</p>
+                </div>
+
+                <div class="experience-item">
+                    <h3>Head of Security</h3>
+                    <p class="role">Window Patrol Division</p>
+                    <p class="duration">24/7 On-Call</p>
+                    <p class="description">Monitoring bird activity and protecting against suspicious red dots</p>
+                </div>
+
+                <div class="experience-item">
+                    <h3>Quality Control Specialist</h3>
+                    <p class="role">Kitchen Department</p>
+                    <p class="duration">Meal Times</p>
+                    <p class="description">Thorough inspection of all food bowls and treat containers</p>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>Education</h2>
+                <div class="education-item">
+                    <h3>Pawsome University</h3>
+                    <p>PhD in Meowology</p>
+                    <p class="duration">Since Birth</p>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>Notable Achievements</h2>
+                <div class="award-item">
+                    <p>🏆 Fastest Treat Catcher 2023</p>
+                    <p>🎖️ Most Adorable Meow 2022</p>
+                    <p>🌟 Best Napping Positions 2021</p>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h2>Special Skills</h2>
+                <div class="project-item">
+                    <p>🐾 Can wake human up at exactly 5AM</p>
+                    <p>😺 Expert at knocking things off tables</p>
+                    <p>😻 Professional laptop keyboard warmer</p>
+                    <p>🐱 Certified box inspector</p>
+                </div>
+            </div>
+
+            <div class="social-links">
+                <a href="#" title="Catstagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" title="Pawter"><i class="fab fa-twitter"></i></a>
+                <a href="#" title="CatTube"><i class="fab fa-youtube"></i></a>
+                <a href="#" title="OnlyPaws"><i class="fab fa-paw"></i></a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
