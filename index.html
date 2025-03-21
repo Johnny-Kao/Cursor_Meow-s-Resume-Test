@@ -280,69 +280,44 @@
             display: flex;
             justify-content: space-around;
             margin: 20px 0 30px 0;
-            padding: 20px;
+            padding: 15px;
             background: rgba(255, 255, 255, 0.8);
             border-radius: 15px;
             border: 1px dashed #ffd1dc;
-            box-shadow: 0 4px 15px rgba(255, 107, 136, 0.1);
         }
 
         .counter-item {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
-            padding: 15px;
-            background: white;
-            border-radius: 12px;
+            gap: 5px;
+        }
+
+        .counter-item i {
+            color: #ff6b88;
+            font-size: min(2vw, 1.5em);
+        }
+
+        .counter-item span {
+            color: #ff8fa3;
+        }
+
+        #visitorCount, #likeCount, #treatCount {
+            font-size: min(2.5vw, 1.8em);
+            font-weight: bold;
+            color: #ff6b88;
             transition: all 0.3s ease;
         }
 
-        .counter-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(255, 107, 136, 0.2);
-        }
-
-        .counter-item i {
-            color: #ff6b88;
-            font-size: min(2.2vw, 1.8em);
-            margin-bottom: 5px;
-        }
-
-        #visitorCount, #todayCount, #monthCount {
-            font-size: min(2.5vw, 2em);
-            font-weight: bold;
-            color: #ff6b88;
-            font-family: 'Arial Rounded MT Bold', sans-serif;
-        }
-
         .counter-label {
-            font-size: min(1.3vw, 0.9em);
+            font-size: min(1.2vw, 0.8em);
             color: #ff8fa3;
-            font-weight: 500;
         }
 
-        /* 添加可爱的加载动画 */
-        @keyframes pawPulse {
+        @keyframes countPop {
             0% { transform: scale(1); }
             50% { transform: scale(1.1); }
             100% { transform: scale(1); }
-        }
-
-        .counter-item i {
-            animation: pawPulse 2s infinite;
-        }
-
-        /* 响应式调整 */
-        @media (max-width: 768px) {
-            .visitor-counter {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .counter-item {
-                width: 100%;
-            }
         }
     </style>
 </head>
@@ -355,28 +330,21 @@
         </div>
         
         <div class="content-section">
-            <!-- 首先隐藏原始的 Elfsight 组件 -->
-            <div style="display: none;">
-                <script src="https://static.elfsight.com/platform/platform.js" async></script>
-                <div class="elfsight-app-fd1fc18a-9627-4539-ab64-7f3acee468c5" data-elfsight-app-lazy></div>
-            </div>
-
-            <!-- 我们的自定义计数器UI -->
             <div class="visitor-counter">
                 <div class="counter-item">
                     <i class="fas fa-paw"></i>
-                    <span id="visitorCount">--</span>
+                    <span id="visitorCount">0</span>
                     <span class="counter-label">Visitors</span>
                 </div>
                 <div class="counter-item">
-                    <i class="fas fa-clock"></i>
-                    <span id="todayCount">--</span>
-                    <span class="counter-label">Today</span>
+                    <i class="fas fa-heart"></i>
+                    <span id="likeCount">0</span>
+                    <span class="counter-label">Likes</span>
                 </div>
                 <div class="counter-item">
-                    <i class="fas fa-calendar"></i>
-                    <span id="monthCount">--</span>
-                    <span class="counter-label">This Month</span>
+                    <i class="fas fa-fish"></i>
+                    <span id="treatCount">0</span>
+                    <span class="counter-label">Treats</span>
                 </div>
             </div>
             <div class="paw-decoration"></div>
@@ -464,62 +432,66 @@
     </div>
 
     <script>
-        // 等待 Elfsight 加载完成
-        function waitForElfsight() {
-            const checkInterval = setInterval(() => {
-                const elfsightElement = document.querySelector('.elfsight-app-fd1fc18a-9627-4539-ab64-7f3acee468c5');
-                
-                if (elfsightElement && elfsightElement.innerHTML !== '') {
-                    clearInterval(checkInterval);
-                    updateCustomCounters();
-                }
-            }, 1000);
+        // 生成指定范围内的随机数
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
         }
 
-        function updateCustomCounters() {
-            // 获取 Elfsight 数据
-            const elfsightElement = document.querySelector('.elfsight-app-fd1fc18a-9627-4539-ab64-7f3acee468c5');
+        // 带动画效果的数字更新
+        function animateValue(element, start, end, duration) {
+            element.style.animation = 'countPop 0.5s ease';
             
-            // 解析数据并更新我们的计数器
-            // 注意：这里的选择器需要根据实际的 Elfsight 结构调整
-            const totalVisitors = extractNumber(elfsightElement, '总访问量');
-            const todayVisitors = extractNumber(elfsightElement, '今日访问');
-            const monthVisitors = extractNumber(elfsightElement, '本月访问');
-
-            // 使用动画效果更新数字
-            animateNumber('visitorCount', totalVisitors);
-            animateNumber('todayCount', todayVisitors);
-            animateNumber('monthCount', monthVisitors);
-        }
-
-        function extractNumber(element, type) {
-            // 这个函数需要根据实际的 Elfsight 数据结构来调整
-            // 返回提取的数字
-            return 0; // 临时返回值
-        }
-
-        function animateNumber(elementId, finalNumber) {
-            const element = document.getElementById(elementId);
-            const duration = 2000; // 动画持续2秒
-            const steps = 60;
-            const increment = finalNumber / steps;
-            let current = 0;
-            let step = 0;
-
-            const timer = setInterval(() => {
-                step++;
-                current += increment;
-                element.textContent = Math.round(current).toLocaleString();
-
-                if (step >= steps) {
-                    clearInterval(timer);
-                    element.textContent = finalNumber.toLocaleString();
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const current = Math.floor(progress * (end - start) + start);
+                element.textContent = current.toLocaleString();
+                
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
                 }
-            }, duration / steps);
+            };
+            window.requestAnimationFrame(step);
         }
 
-        // 启动监听
-        document.addEventListener('DOMContentLoaded', waitForElfsight);
+        // 更新所有计数器
+        function updateCounters() {
+            const visitorElement = document.getElementById('visitorCount');
+            const likeElement = document.getElementById('likeCount');
+            const treatElement = document.getElementById('treatCount');
+
+            // 生成新的随机数
+            const newVisitors = getRandomNumber(1000, 9999);
+            const newLikes = getRandomNumber(500, 5000);
+            const newTreats = getRandomNumber(100, 2000);
+
+            // 获取当前值
+            const currentVisitors = parseInt(visitorElement.textContent.replace(/,/g, '')) || 0;
+            const currentLikes = parseInt(likeElement.textContent.replace(/,/g, '')) || 0;
+            const currentTreats = parseInt(treatElement.textContent.replace(/,/g, '')) || 0;
+
+            // 应用动画更新
+            animateValue(visitorElement, currentVisitors, newVisitors, 1000);
+            animateValue(likeElement, currentLikes, newLikes, 1000);
+            visitors += Math.floor(Math.random() * 3);
+            likes += Math.floor(Math.random() * 2);
+            treats += Math.floor(Math.random() * 1);
+
+            document.getElementById('visitorCount').textContent = visitors.toLocaleString();
+            document.getElementById('likeCount').textContent = likes.toLocaleString();
+            document.getElementById('treatCount').textContent = treats.toLocaleString();
+        }
+
+        setInterval(updateCounters, 5000);
+
+        document.querySelectorAll('.counter-item').forEach(item => {
+            item.addEventListener('mouseover', function() {
+                this.style.animation = 'none';
+                this.offsetHeight;
+                this.style.animation = 'countUp 0.5s ease';
+            });
+        });
     </script>
 </body>
 </html>
